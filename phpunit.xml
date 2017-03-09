@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true" convertWarningsToExceptions="true"
+	stopOnFailure="false" syntaxCheck="false" backupGlobals="false"
+	backupStaticAttributes="false" colors="true">
+
+	<testsuites>
+		<testsuite name="SeleniumEndToEndTests">
+		 	<file>./Tests/acceptance/ListPagesTestcases.php</file>
+			<file>./Tests/acceptance/LocationPopUpTestcases.php</file>
+			<file>./Tests/acceptance/LocationSearchTestcases.php</file> 
+			<file>./Tests/acceptance/PriceFilterTestcases.php</file> 
+			<file>./Tests/acceptance/SortingTestcases.php</file>
+			
+		</testsuite>
+	</testsuites>
+
+</phpunit>

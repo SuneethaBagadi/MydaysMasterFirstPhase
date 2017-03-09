@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PhpSeleniumTestsuite" default="test">
+	
+    <property name="reportDir" value="${basedir}/reports" />
+    <property name="logDir" value="${basedir}/logs" />
+    <property name="seleniumPort" value="4444" />
+    <property name="seleniumVersion" value="3.0.1" />
+
+    <target name="clean" description="Cleanup for tests.">
+        <delete dir="${reportDir}" />
+        <delete dir="${logDir}" />
+    </target>
+    <target name="selenium-get" description="Download selenium server.">
+        <get src="http://selenium-release.storage.googleapis.com/3.0/selenium-server-standalone-${seleniumVersion}.jar"
+             dest="${basedir}/selenium/" />
+    </target>
+    <target name="install" description="Install and download needed files.">
+        <antcall target="selenium-get" />
+    </target>
+
+    <target name="phpunit" description="Run PHPUnit.">
+        <exec executable="C:\\xampp\\php\\pear\\vendor\\bin\\phpunit.bat">
+            <arg value="--verbose" />
+            <arg value="--configuration=${basedir}/phpunit.xml" />
+            <arg value="--log-junit=${reportDir}/selenium-tests.xml" />
+            <arg value="--testdox-html=${reportDir}/selenium-tests.html" />
+        </exec>
+    </target>
+
+    <target name="prepare" description="Prepare for tests.">
+        <mkdir dir="${reportDir}" />
+        <mkdir dir="${reportDir}/failures" />
+        <mkdir dir="${logDir}" />
+        <touch file="${logDir}/selenium_server.log" />
+        <touch file="${logDir}/selenium_server_stop.log" />
+    </target>
+
+    <!-- <target name="serve-example-app" description="Serve example webapp with python SimpleHTTPServer.">
+        <echo>Starting Python SimpleHTTPServer</echo>
+        <echo>Point your web-browser to http://localhost:8080/index.html and see it in action!</echo>
+        <exec executable="python" dir="${basedir}/example_webapp">
+            <arg value="-m" />
+            <arg value="SimpleHTTPServer" />
+            <arg value="8080" />
+        </exec>
+    </target>
+ -->
+<!--     <target name="start-selenium" description="Start Selenium standalone server.">
+        <echo>Starting Selenium Server at port ${seleniumPort}</echo> 
+        <java jar='${basedir}/selenium/selenium-server-standalone-3.0.1.jar' fork="true">
+            <arg line='-log "${logDir}\selenium_server.log"'/>
+        </java>
+        Without this waitfor phpunit task may start before selenium server is up
+        <waitfor maxwait="10" maxwaitunit="second" checkevery="500">
+            <http url="http://localhost:4444/selenium-server/driver/?cmd=getLogMessages" />
+        </waitfor>
+    </target> -->
+
+    <target name="stop-selenium" description="Stop Selenium standalone server.">
+        <echo>Stopping Selenium Server at port ${seleniumPort}</echo>
+        <get dest="${logDir}/selenium_server_stop.log" ignoreerrors="true"
+             src="http://localhost:${seleniumPort}/selenium-server/driver/?cmd=shutDownSeleniumServer" />
+    </target>
+
+    <target name="test" description="Run end-to-end tests with PHPUnit and Selenium.">
+        <antcall target="clean" />
+        <antcall target="prepare" />
+        <!-- <antcall target="start-selenium" /> -->
+        <antcall target="phpunit" />
+        <!-- <antcall target="stop-selenium" /> -->
+    </target>
+
+</project>
